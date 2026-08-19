@@ -1,33 +1,34 @@
 import React from 'react';
 
-function HabitTracker({ habit }) {
-  if (!habit) return null;
+export default function HabitTracker({ habit }) {
+  const habitName = habit?.name || habit?.title || 'Micro-Habit';
+  const progress = habit?.progress || [];
+  const totalDays = 30;
 
-  const { name, progress = [] } = habit;
+  const days = Array.from({ length: totalDays }, (_, index) => {
+    const dayNum = index + 1;
+    const progressItem = progress.find((p) => p.day === dayNum);
+    return {
+      day: dayNum,
+      completed: progressItem ? progressItem.completed : false,
+    };
+  });
 
   return (
-    <div className="habit-tracker">
-      <h2>{name}</h2>
-      <div className="tracker-grid">
-        {Array.from({ length: 30 }, (_, index) => {
-          const dayNumber = index + 1;
-          const dayProgress = progress.find((p) => p.day === dayNumber);
-          const isCompleted = dayProgress ? dayProgress.completed : false;
-
-          return (
-            <div
-              key={dayNumber}
-              className={`day-card ${isCompleted ? 'completed' : ''}`}
-              data-testid={`day-${dayNumber}`}
-            >
-              <span className="day-label">Day {dayNumber}</span>
-              <span className="day-status">{isCompleted ? '✓' : ''}</span>
-            </div>
-          );
-        })}
+    <div className="tracker-container">
+      <h2>{habitName}</h2>
+      <p className="tracker-subtitle">30-Day Habit Tracker</p>
+      <div className="grid">
+        {days.map((day) => (
+          <div
+            key={day.day}
+            className={`day-box ${day.completed ? 'completed' : ''}`}
+          >
+            <span className="day-number">Day {day.day}</span>
+            <span className="status">{day.completed ? '✓' : ''}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
-
-export default HabitTracker;
