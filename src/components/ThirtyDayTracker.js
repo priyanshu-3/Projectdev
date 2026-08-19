@@ -1,1 +1,52 @@
-LyoqCiAqIGNvbXBvbmVudHMvVGhpcnR5RGF5VHJhY2tlci5qcwogKiBQbGFjZWhvbGRlciBjb21wb25lbnQgZm9yIHRoZSAzMC1kYXkgaGFiaXQgdHJhY2tlci4KICovCgppbXBvcnQgUmVhY3QgZnJvbSAncmVhY3QnOwoKZnVuY3Rpb24gVGhpcnR5RGF5VHJhY2tlcih7IGhhYml0IH0pIHsKICBpZiAoIWhhYml0KSB7CiAgICByZXR1cm4gPHA+Tm8gaGFiaXQgZGF0YSBwcm92aWRlZCB0byB0cmFja2VyLjwvcD47CiAgfQoKICByZXR1cm4gKAogICAgPGRpdiBzdHlsZT17eyBwYWRkaW5nOiAnMjBweCcsIGJvcmRlcjogJzFweCBzb2xpZCAjMDA3YmZmJywgYm9yZGVyUmFkaXVzOiAnOHB4JywgbWF4V2lkdGg6ICc4MDBweCcsIG1hcmdpbjogJzUwcHggYXV0bycsIHRleHRBbGlnbjogJ2NlbnRlcicgfX0+CiAgICAgIDxoMj5Zb3VyIDMwLURheSBNaWNyby1IYWJpdCBUcmFja2VyPC9oMj4KICAgICAgPGgzPkhhYml0OiB7aGFiaXQubmFtZX08L2gzPgogICAgICA8cD5DdXJyZW50IFByb2dyZXNzOiB7aGFiaXQucHJvZ3Jlc3MgfHwgJzAnfSBkYXlzIGNvbXBsZXRlZDwvcD4KICAgICAgey8qIEluIGEgcmVhbCBhcHBsaWNhdGlvbiwgdGhpcyB3b3VsZCBkaXNwbGF5IGEgZ3JpZCBmb3IgMzAgZGF5cywgcHJvZ3Jlc3MsIGV0Yy4gKi99CiAgICAgIDxkaXYgc3R5bGU9e3sgbWFyZ2luVG9wOiAnMjBweCcsIGJvcmRlcjogJzFweCBkYXNoZWQgIzAwN2JmZicsIHBhZGRpbmc6ICcxNXB4JyB9fT4KICAgICAgICA8cD5WaXN1YWwgdHJhY2tlciBmb3Ige2hhYml0Lm5hbWV9IGdvZXMgaGVyZSE8L3A+CiAgICAgICAgPHA+RGF5IDEgfCBEYXkgMiB8IC4uLiB8IERheSAzMDwvcD4KICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICApOwp9CgpleHBvcnQgZGVmYXVsdCBUaGlydHlEYXlUcmFja2VyOwo=
+import React from 'react';
+
+function ThirtyDayTracker({ habit, onHabitUpdate }) {
+  if (!habit) return null;
+
+  const habitName = habit.name || 'Your Micro-Habit';
+  const progressList = Array.isArray(habit.progress) ? habit.progress : [];
+
+  const days = Array.from({ length: 30 }, (_, index) => {
+    const dayNumber = index + 1;
+    const dayData = progressList.find((p) => p.day === dayNumber) || {
+      day: dayNumber,
+      completed: false,
+    };
+    return dayData;
+  });
+
+  const completedCount = days.filter((d) => d.completed).length;
+
+  return (
+    <div className="tracker-container">
+      <header className="tracker-header">
+        <h2 className="habit-title">{habitName}</h2>
+        <div className="progress-summary">
+          <span>Progress: <strong>{completedCount} / 30</strong> days completed</span>
+          <div className="progress-bar-container">
+            <div
+              className="progress-bar-fill"
+              style={{ width: `${(completedCount / 30) * 100}%` }}
+            ></div>
+          </div>
+        </div>
+      </header>
+
+      <div className="days-grid">
+        {days.map((day) => (
+          <div
+            key={day.day}
+            className={`day-card ${day.completed ? 'completed' : 'pending'}`}
+          >
+            <span className="day-number">Day {day.day}</span>
+            <span className="day-status">
+              {day.completed ? '✓ Done' : 'Pending'}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default ThirtyDayTracker;
