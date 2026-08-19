@@ -3,6 +3,7 @@ import { fetchCurrentHabit } from './api';
 import LoadingIndicator from './components/LoadingIndicator';
 import HabitForm from './components/HabitForm';
 import HabitTracker from './components/HabitTracker';
+import './App.css';
 
 function App() {
   const [habit, setHabit] = useState(null);
@@ -16,7 +17,8 @@ function App() {
       const data = await fetchCurrentHabit();
       setHabit(data);
     } catch (err) {
-      setError(err.message || 'Failed to load habit');
+      console.error('Error fetching habit:', err);
+      setError('Failed to load habit data. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -31,7 +33,7 @@ function App() {
   };
 
   return (
-    <div className="app">
+    <div className="app-container">
       <header className="app-header">
         <h1>Micro-Habit Tracker</h1>
       </header>
@@ -39,7 +41,7 @@ function App() {
         {loading ? (
           <LoadingIndicator />
         ) : error ? (
-          <div className="error-state">
+          <div className="error-container">
             <p className="error-message">{error}</p>
             <button onClick={loadHabit}>Retry</button>
           </div>
