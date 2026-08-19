@@ -1,14 +1,11 @@
 export async function fetchCurrentHabit() {
   const response = await fetch('/api/habits/current');
-  
   if (response.status === 404) {
     return null;
   }
-  
   if (!response.ok) {
-    throw new Error(`Failed to fetch habit: ${response.status} ${response.statusText}`);
+    throw new Error(`Failed to fetch current habit: ${response.statusText}`);
   }
-  
   return await response.json();
 }
 
@@ -20,10 +17,8 @@ export async function createHabit(habitData) {
     },
     body: JSON.stringify(habitData),
   });
-
   if (!response.ok) {
-    throw new Error(`Failed to create habit: ${response.status} ${response.statusText}`);
+    throw new Error(`Failed to create habit: ${response.statusText}`);
   }
-
   return await response.json();
 }
