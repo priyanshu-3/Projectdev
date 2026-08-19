@@ -1,1 +1,12 @@
-aW1wb3J0IFJlYWN0IGZyb20gJ3JlYWN0JzsKCmZ1bmN0aW9uIExvYWRpbmdJbmRpY2F0b3IoKSB7CiAgcmV0dXJuICgKICAgIDxkaXYgY2xhc3NOYW1lPSJsb2FkaW5nLWluZGljYXRvciI+CiAgICAgIDxwPkxvYWRpbmcgeW91ciBoYWJpdCBkYXRhLi4uPC9wPgogICAgICA8ZGl2IGNsYXNzTmFtZT0ic3Bpbm5lciI+PC9kaXY+CiAgICA8L2Rpdj4KICApOwp9CgpleHBvcnQgZGVmYXVsdCBMb2FkaW5nSW5kaWNhdG9yOwo=
+import React from 'react';
+
+function LoadingIndicator() {
+  return (
+    <div className="loading-indicator" data-testid="loading-indicator">
+      <div className="spinner" />
+      <p>Loading...</p>
+    </div>
+  );
+}
+
+export default LoadingIndicator;
