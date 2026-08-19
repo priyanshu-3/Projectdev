@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createHabit } from '../api';
 
-function HabitForm({ onHabitCreated }) {
+export default function HabitForm({ onHabitCreated }) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -27,33 +27,26 @@ function HabitForm({ onHabitCreated }) {
 
   return (
     <div className="habit-form-container">
-      <h2>Define Your Micro-Habit</h2>
-      <p className="form-description">
-        Start small. Choose a simple daily action you can complete in under 2 minutes.
-      </p>
-
+      <h2>Create Your Micro-Habit</h2>
+      <p>Start small to build long-term consistency.</p>
       {error && <div className="error-message">{error}</div>}
-
       <form onSubmit={handleSubmit} className="habit-form">
         <div className="form-group">
-          <label htmlFor="habit-name">Habit Name</label>
+          <label htmlFor="habitName">Habit Name</label>
           <input
-            id="habit-name"
+            id="habitName"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g., Read 1 page of a book"
+            placeholder="e.g., Read 5 pages daily"
             disabled={loading}
             required
           />
         </div>
-
-        <button type="submit" className="submit-btn" disabled={loading || !name.trim()}>
-          {loading ? 'Creating...' : 'Start 30-Day Tracker'}
+        <button type="submit" disabled={loading || !name.trim()} className="btn-primary">
+          {loading ? 'Creating...' : 'Start 30-Day Challenge'}
         </button>
       </form>
     </div>
   );
 }
-
-export default HabitForm;
