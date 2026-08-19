@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { fetchCurrentHabit } from './api';
 import LoadingIndicator from './components/LoadingIndicator';
 import HabitForm from './components/HabitForm';
 import ThirtyDayTracker from './components/ThirtyDayTracker';
 import './App.css';
 
-function App() {
+export default function App() {
   const [habit, setHabit] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const loadHabit = async () => {
+  const loadHabit = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const habitData = await fetchCurrentHabit();
-      setHabit(habitData);
+      const data = await fetchCurrentHabit();
+      setHabit(data);
     } catch (err) {
-      setError('Unable to load habit data. Please try again later.');
+      setError(err.message || 'Failed to load habit');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadHabit();
-  }, []);
+  }, [loadHabit]);
 
   const handleHabitCreated = (newHabit) => {
     setHabit(newHabit);
@@ -37,24 +37,26 @@ function App() {
         <h1>Micro-Habit Tracker</h1>
       </header>
 
-      <main className="app-content">
-        {loading ? (
-          <LoadingIndicator message="Loading habit data..." />
-        ) : error ? (
+      <main className="app-main">
+        {loading && <LoadingIndicator />}
+
+        {!loading && error && (
           <div className="error-container">
-            <p className="error-text">{error}</p>
-            <button onClick={loadHabit} className="retry-btn">
+            <p className="error-message">{error}</p>
+            <button onClick={loadHabit} className="btn-secondary">
               Retry
             </button>
           </div>
-        ) : habit ? (
-          <ThirtyDayTracker habit={habit} onHabitUpdate={setHabit} />
-        ) : (
-          <HabitForm onHabitCreated={handleHabitCreated} />
+        )}
+
+        {!loading && !error && (
+          habit ? (
+            <ThirtyDayTracker habit={habit} />
+          ) : (
+            <HabitForm onHabitCreated={handleHabitCreated} />
+          )
         )}
       </main>
     </div>
   );
 }
-
-export default App;
