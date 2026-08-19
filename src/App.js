@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchCurrentHabit } from './api';
 import LoadingIndicator from './components/LoadingIndicator';
 import HabitForm from './components/HabitForm';
-import HabitTracker from './components/HabitTracker';
+import ThirtyDayTracker from './components/ThirtyDayTracker';
 import './App.css';
 
 function App() {
@@ -14,11 +14,10 @@ function App() {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchCurrentHabit();
-      setHabit(data);
+      const habitData = await fetchCurrentHabit();
+      setHabit(habitData);
     } catch (err) {
-      console.error('Error fetching habit:', err);
-      setError('Failed to load habit data. Please try again later.');
+      setError('Unable to load habit data. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -37,16 +36,19 @@ function App() {
       <header className="app-header">
         <h1>Micro-Habit Tracker</h1>
       </header>
+
       <main className="app-content">
         {loading ? (
-          <LoadingIndicator />
+          <LoadingIndicator message="Loading habit data..." />
         ) : error ? (
           <div className="error-container">
-            <p className="error-message">{error}</p>
-            <button onClick={loadHabit}>Retry</button>
+            <p className="error-text">{error}</p>
+            <button onClick={loadHabit} className="retry-btn">
+              Retry
+            </button>
           </div>
         ) : habit ? (
-          <HabitTracker habit={habit} />
+          <ThirtyDayTracker habit={habit} onHabitUpdate={setHabit} />
         ) : (
           <HabitForm onHabitCreated={handleHabitCreated} />
         )}
