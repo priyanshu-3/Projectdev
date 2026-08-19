@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { createHabit } from '../api';
 
-export default function HabitForm({ onHabitCreated }) {
+function HabitForm({ onHabitCreated }) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,23 +12,14 @@ export default function HabitForm({ onHabitCreated }) {
 
     setLoading(true);
     setError(null);
+
     try {
-      const response = await fetch('/api/habits', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim() }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create habit');
-      }
-
-      const habit = await response.json();
+      const newHabit = await createHabit({ name: name.trim() });
       if (onHabitCreated) {
-        onHabitCreated(habit);
+        onHabitCreated(newHabit);
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Failed to create habit');
     } finally {
       setLoading(false);
     }
@@ -35,24 +27,33 @@ export default function HabitForm({ onHabitCreated }) {
 
   return (
     <div className="habit-form-container">
-      <h2>Create a Micro-Habit</h2>
-      <form onSubmit={handleSubmit}>
+      <h2>Define Your Micro-Habit</h2>
+      <p className="form-description">
+        Start small. Choose a simple daily action you can complete in under 2 minutes.
+      </p>
+
+      {error && <div className="error-message">{error}</div>}
+
+      <form onSubmit={handleSubmit} className="habit-form">
         <div className="form-group">
-          <label htmlFor="habit-name">Habit Name:</label>
+          <label htmlFor="habit-name">Habit Name</label>
           <input
             id="habit-name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Read 1 page daily"
+            placeholder="e.g., Read 1 page of a book"
+            disabled={loading}
             required
           />
         </div>
-        {error && <p className="error-message">{error}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Creating...' : 'Create Habit'}
+
+        <button type="submit" className="submit-btn" disabled={loading || !name.trim()}>
+          {loading ? 'Creating...' : 'Start 30-Day Tracker'}
         </button>
       </form>
     </div>
   );
 }
+
+export default HabitForm;
