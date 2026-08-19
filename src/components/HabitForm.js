@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function HabitForm({ onHabitCreated }) {
+export default function HabitForm({ onHabitCreated }) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,7 +11,6 @@ function HabitForm({ onHabitCreated }) {
 
     setLoading(true);
     setError(null);
-
     try {
       const response = await fetch('/api/habits', {
         method: 'POST',
@@ -23,9 +22,9 @@ function HabitForm({ onHabitCreated }) {
         throw new Error('Failed to create habit');
       }
 
-      const habitData = await response.json();
+      const habit = await response.json();
       if (onHabitCreated) {
-        onHabitCreated(habitData);
+        onHabitCreated(habit);
       }
     } catch (err) {
       setError(err.message);
@@ -35,22 +34,21 @@ function HabitForm({ onHabitCreated }) {
   };
 
   return (
-    <div className="habit-form">
-      <h2>Create Your Micro-Habit</h2>
-      {error && <div className="error-message">{error}</div>}
+    <div className="habit-form-container">
+      <h2>Create a Micro-Habit</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="habit-name">Habit Name:</label>
           <input
-            type="text"
             id="habit-name"
+            type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Read 5 pages daily"
-            disabled={loading}
+            placeholder="e.g. Read 1 page daily"
             required
           />
         </div>
+        {error && <p className="error-message">{error}</p>}
         <button type="submit" disabled={loading}>
           {loading ? 'Creating...' : 'Create Habit'}
         </button>
@@ -58,5 +56,3 @@ function HabitForm({ onHabitCreated }) {
     </div>
   );
 }
-
-export default HabitForm;
