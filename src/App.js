@@ -1,1 +1,56 @@
-aW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VFZmZlY3QgfSBmcm9tICdyZWFjdCc7CmltcG9ydCB7IGZldGNoQ3VycmVudEhhYml0IH0gZnJvbSAnLi91dGlscy9hcGknOwppbXBvcnQgSGFiaXRDcmVhdGlvbkZvcm0gZnJvbSAnLi9jb21wb25lbnRzL0hhYml0Q3JlYXRpb25Gb3JtJzsKaW1wb3J0IEhhYml0VHJhY2tlciBmcm9tICcuL2NvbXBvbmVudHMvSGFiaXRUcmFja2VyJzsKaW1wb3J0IExvYWRpbmdJbmRpY2F0b3IgZnJvbSAnLi9jb21wb25lbnRzL0xvYWRpbmdJbmRpY2F0b3InOwoKZnVuY3Rpb24gQXBwKCkgewogIGNvbnN0IFtoYWJpdCwgc2V0SGFiaXRdID0gdXNlU3RhdGUobnVsbCk7IC8vIG51bGwgbWVhbnMgbm8gaGFiaXQgZm91bmQsIG9iamVjdCBtZWFucyBoYWJpdCBleGlzdHMKICBjb25zdCBbbG9hZGluZywgc2V0TG9hZGluZ10gPSB1c2VTdGF0ZSh0cnVlKTsKICBjb25zdCBbZXJyb3IsIHNldEVycm9yXSA9IHVzZVN0YXRlKG51bGwpOwoKICB1c2VFZmZlY3QoKCkgPT4gewogICAgY29uc3QgbG9hZEhhYml0ID0gYXN5bmMgKCkgPT4gewogICAgICB0cnkgewogICAgICAgIHNldExvYWRpbmcodHJ1ZSk7CiAgICAgICAgc2V0RXJyb3IobnVsbCk7CiAgICAgICAgY29uc3QgZGF0YSA9IGF3YWl0IGZldGNoQ3VycmVudEhhYml0KCk7CiAgICAgICAgc2V0SGFiaXQoZGF0YSk7CiAgICAgIH0gY2F0Y2ggKGVycikgewogICAgICAgIGlmIChlcnIucmVzcG9uc2UgJiYgZXJyLnJlc3BvbnNlLnN0YXR1cyA9PT0gNDA0KSB7CiAgICAgICAgICBzZXRIYWJpdChudWxsKTsgLy8gTm8gaGFiaXQgZm91bmQsIGRpc3BsYXkgY3JlYXRpb24gZm9ybQogICAgICAgIH0gZWxzZSB7CiAgICAgICAgICBzZXRFcnJvcignRmFpbGVkIHRvIGxvYWQgaGFiaXQgZGF0YS4gUGxlYXNlIHRyeSBhZ2Fpbi4nKTsKICAgICAgICAgIGNvbnNvbGUuZXJyb3IoJ0Vycm9yIGZldGNoaW5nIGhhYml0OicsIGVycik7CiAgICAgICAgfQogICAgICB9IGZpbmFsbHkgewogICAgICAgIHNldExvYWRpbmcoZmFsc2UpOwogICAgICB9CiAgICB9OwoKICAgIGxvYWRIYWJpdCgpOwogIH0sIFtdKTsgLy8gRW1wdHkgZGVwZW5kZW5jeSBhcnJheSBtZWFucyBydW4gb25jZSBvbiBjb21wb25lbnQgbW91bnQKCiAgaWYgKGxvYWRpbmcpIHsKICAgIHJldHVybiA8TG9hZGluZ0luZGljYXRvciAvPjsKICB9CgogIGlmIChlcnJvcikgewogICAgcmV0dXJuIDxkaXYgY2xhc3NOYW1lPSJlcnJvci1tZXNzYWdlIj57ZXJyb3J9PC9kaXY+OwogIH0KCiAgcmV0dXJuICgKICAgIDxkaXYgY2xhc3NOYW1lPSJBcHAiPgogICAgICB7aGFiaXQgPyAoCiAgICAgICAgPEhhYml0VHJhY2tlciBoYWJpdD17aGFiaXR9IC8+CiAgICAgICkgOiAoCiAgICAgICAgPEhhYml0Q3JlYXRpb25Gb3JtIC8+CiAgICAgICl9CiAgICA8L2Rpdj4KICApOwp9CgpleHBvcnQgZGVmYXVsdCBBcHA7Cg==
+import React, { useState, useEffect } from 'react';
+import { fetchCurrentHabit } from './api';
+import LoadingIndicator from './components/LoadingIndicator';
+import HabitForm from './components/HabitForm';
+import HabitTracker from './components/HabitTracker';
+
+function App() {
+  const [habit, setHabit] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const loadHabit = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await fetchCurrentHabit();
+      setHabit(data);
+    } catch (err) {
+      setError(err.message || 'Failed to load habit');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadHabit();
+  }, []);
+
+  const handleHabitCreated = (newHabit) => {
+    setHabit(newHabit);
+  };
+
+  return (
+    <div className="app">
+      <header className="app-header">
+        <h1>Micro-Habit Tracker</h1>
+      </header>
+      <main className="app-content">
+        {loading ? (
+          <LoadingIndicator />
+        ) : error ? (
+          <div className="error-state">
+            <p className="error-message">{error}</p>
+            <button onClick={loadHabit}>Retry</button>
+          </div>
+        ) : habit ? (
+          <HabitTracker habit={habit} />
+        ) : (
+          <HabitForm onHabitCreated={handleHabitCreated} />
+        )}
+      </main>
+    </div>
+  );
+}
+
+export default App;
