@@ -1,1 +1,33 @@
-aW1wb3J0IFJlYWN0IGZyb20gJ3JlYWN0JzsKCmZ1bmN0aW9uIEhhYml0VHJhY2tlcih7IGhhYml0IH0pIHsKICBpZiAoIWhhYml0KSB7CiAgICByZXR1cm4gbnVsbDsgLy8gU2hvdWxkIG5vdCBoYXBwZW4gaWYgcmVuZGVyZWQgY29uZGl0aW9uYWxseQogIH0KCiAgY29uc3QgeyBuYW1lLCBwcm9ncmVzcyB9ID0gaGFiaXQ7CgogIC8vIEV4YW1wbGU6IENhbGN1bGF0ZSBjb21wbGV0ZWQgZGF5cyBiYXNlZCBvbiBhICdwcm9ncmVzcycgb2JqZWN0IGxpa2UgeyAnWVlZWS1NTS1ERCc6IHRydWUvZmFsc2UgfQogIGNvbnN0IGNvbXBsZXRlZERheXMgPSBwcm9ncmVzcyA/IE9iamVjdC52YWx1ZXMocHJvZ3Jlc3MpLmZpbHRlcihCb29sZWFuKS5sZW5ndGggOiAwOwogIGNvbnN0IHRvdGFsRGF5c1RyYWNrZWQgPSBwcm9ncmVzcyA/IE9iamVjdC5rZXlzKHByb2dyZXNzKS5sZW5ndGggOiAwOwoKICByZXR1cm4gKAogICAgPGRpdiBjbGFzc05hbWU9ImhhYml0LXRyYWNrZXIiPgogICAgICA8aDI+WW91ciAzMC1EYXkgSGFiaXQgVHJhY2tlcjoge25hbWV9PC9oMj4KICAgICAgPHA+S2VlcCB1cCB0aGUgZ3JlYXQgd29yayEgWW91J3ZlIGNvbXBsZXRlZCB0aGlzIGhhYml0IG9uIHtjb21wbGV0ZWREYXlzfSBvdXQgb2Yge3RvdGFsRGF5c1RyYWNrZWR9IHRyYWNrZWQgZGF5cy48L3A+CiAgICAgIHsvKiBQbGFjZWhvbGRlciBmb3IgdGhlIGFjdHVhbCAzMC1kYXkgZ3JpZC9jYWxlbmRhciB2aXN1YWxpemF0aW9uICovfQogICAgICA8ZGl2IGNsYXNzTmFtZT0idHJhY2tlci1ncmlkIj4KICAgICAgICA8cD5WaXN1YWwgMzAtZGF5IHRyYWNrZXIgY29taW5nIHNvb24uLi48L3A+CiAgICAgIDwvZGl2PgogICAgPC9kaXY+CiAgKTsKfQoKZXhwb3J0IGRlZmF1bHQgSGFiaXRUcmFja2VyOwo=
+import React from 'react';
+
+function HabitTracker({ habit }) {
+  if (!habit) return null;
+
+  const { name, progress = [] } = habit;
+
+  return (
+    <div className="habit-tracker">
+      <h2>{name}</h2>
+      <div className="tracker-grid">
+        {Array.from({ length: 30 }, (_, index) => {
+          const dayNumber = index + 1;
+          const dayProgress = progress.find((p) => p.day === dayNumber);
+          const isCompleted = dayProgress ? dayProgress.completed : false;
+
+          return (
+            <div
+              key={dayNumber}
+              className={`day-card ${isCompleted ? 'completed' : ''}`}
+              data-testid={`day-${dayNumber}`}
+            >
+              <span className="day-label">Day {dayNumber}</span>
+              <span className="day-status">{isCompleted ? '✓' : ''}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export default HabitTracker;
