@@ -1,12 +1,10 @@
 import React from 'react';
 
-function LoadingIndicator({ message = 'Loading...' }) {
+export default function LoadingIndicator() {
   return (
-    <div className="loading-container" role="status" aria-live="polite">
+    <div className="loading-container">
       <div className="spinner"></div>
-      <p className="loading-text">{message}</p>
+      <p>Loading habit data...</p>
     </div>
   );
 }
-
-export default LoadingIndicator;
