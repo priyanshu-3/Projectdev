@@ -1,12 +1,10 @@
 import React from 'react';
 
-function LoadingIndicator() {
+export default function LoadingIndicator() {
   return (
-    <div className="loading-indicator" data-testid="loading-indicator">
-      <div className="spinner" />
-      <p>Loading...</p>
+    <div className="loading-container" aria-label="Loading">
+      <div className="spinner"></div>
+      <p>Loading habit data...</p>
     </div>
   );
 }
-
-export default LoadingIndicator;
